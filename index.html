@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشكلة وحلها - ورشة تأسونات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #fffbf5;
+            --card-bg: #ffffff;
+            --accent-purple: #7a5ba6;
+            --accent-warm: #d97736;
+            --accent-teal: #3b8a88;
+            --accent-rose: #d64d65;
+            --text-dark: #332d3b;
+            --text-muted: #6e6577;
+            --border-color: #eedecf;
+            --shadow-subtle: 0 10px 30px rgba(122, 91, 166, 0.08);
+            --radius-main: 22px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 14px;
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(217, 119, 54, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 85%, rgba(122, 91, 166, 0.07) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 660px;
+            background: var(--card-bg);
+            border-radius: var(--radius-main);
+            box-shadow: var(--shadow-subtle);
+            border: 2px solid var(--border-color);
+            padding: 32px 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .cross-container {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 12px;
+            filter: drop-shadow(0 4px 10px rgba(122, 91, 166, 0.25));
+        }
+
+        h1 {
+            color: var(--accent-purple);
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .badge-count {
+            display: inline-block;
+            background: #f4ecfa;
+            color: var(--accent-purple);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .step-section {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .step-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quote-box {
+            background: #fff8f0;
+            border: 2px dashed #f1cdad;
+            border-radius: 16px;
+            padding: 22px;
+            text-align: center;
+            min-height: 105px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #9c4b18;
+            margin: 18px 0;
+            line-height: 1.7;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-purple), #906dbf);
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(122, 91, 166, 0.28);
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-warm {
+            background: linear-gradient(135deg, var(--accent-warm), #e88c52);
+            box-shadow: 0 4px 15px rgba(217, 119, 54, 0.25);
+        }
+
+        .btn-teal {
+            background: linear-gradient(135deg, var(--accent-teal), #4ea3a1);
+            box-shadow: 0 4px 15px rgba(59, 138, 136, 0.25);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid #ecdcd1;
+            font-size: 0.95rem;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease;
+            background: #ffffff;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .timer-card {
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        .timer-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-warm) calc(var(--progress, 0) * 1%), #f0edf3 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            position: relative;
+        }
+
+        .timer-circle::after {
+            content: '';
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: var(--card-bg);
+        }
+
+        .timer-number {
+            position: relative;
+            z-index: 1;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-warm);
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .radio-label {
+            flex: 1;
+            border: 2px solid #ecdcd1;
+            border-radius: 12px;
+            padding: 10px 14px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .radio-options input[type="radio"] {
+            display: none;
+        }
+
+        .radio-options input[type="radio"]:checked + .radio-label {
+            border-color: var(--accent-teal);
+            background: #edf7f7;
+            color: var(--accent-teal);
+        }
+
+        .compare-box {
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid transparent;
+        }
+
+        .before-box {
+            background: #fff4f4;
+            border-color: #f7d0d0;
+        }
+
+        .after-box {
+            background: #f1f8f7;
+            border-color: #c9e8e5;
+        }
+
+        .compare-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .before-box .compare-title { color: var(--accent-rose); }
+        .after-box .compare-title { color: var(--accent-teal); }
+
+        .compare-content {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- الرأس المشترك مع الصليب الملون وعنوان مشكلة وحلها -->
+        <div class="header">
+            <div class="cross-container">
+                <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="44" stroke="#d97736" stroke-width="4" stroke-dasharray="3 3"/>
+                    <rect x="44" y="10" width="12" height="80" rx="6" fill="url(#crossGradV)" />
+                    <rect x="15" y="34" width="70" height="12" rx="6" fill="url(#crossGradH)" />
+                    <circle cx="50" cy="40" r="8" fill="#fffbf5" stroke="#7a5ba6" stroke-width="3"/>
+                    <circle cx="50" cy="40" r="3" fill="#d97736"/>
+                    <defs>
+                        <linearGradient id="crossGradV" x1="50" y1="10" x2="50" y2="90" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#7a5ba6"/>
+                            <stop offset="0.5" stop-color="#3b8a88"/>
+                            <stop offset="1" stop-color="#d97736"/>
+                        </linearGradient>
+                        <linearGradient id="crossGradH" x1="15" y1="40" x2="85" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#d97736"/>
+                            <stop offset="0.5" stop-color="#7a5ba6"/>
+                            <stop offset="1" stop-color="#3b8a88"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1>مشكلة وحلها</h1>
+            <p class="subtitle">وقفة تفكير في الخدمة</p>
+            <span class="badge-count"> مواقف واقعياً من أولياء الأمور</span>
+        </div>
+
+        <!-- الخطوة 1: استخراج الموقف -->
+        <div id="step-1" class="step-section active">
+            <div class="quote-box" id="quote-display">
+                اضغطي على الزر لسحب موقف أو شكوى عشوائية لبدء التدريب...
+            </div>
+            <button class="btn" id="btn-draw" onclick="drawQuote()">اسحبي جملة عشوائية ✨</button>
+            <button class="btn btn-warm" id="btn-start" style="display: none; margin-top: 12px;" onclick="goToStep(2)">بدء التقييم اللحظي ✍️</button>
+        </div>
+
+        <!-- الخطوة 2: الانطباع الفوري (قبل التفكير) -->
+        <div id="step-2" class="step-section">
+            <div class="quote-box" style="font-size: 1rem; padding: 14px; min-height: auto;" id="quote-preview-1"></div>
+            
+            <div class="form-group">
+                <label>1. إيه مشاعرك حالاً أول ما قرأتي الجملة دي؟</label>
+                <textarea id="feelings-before" placeholder="مثلاً: حسيت بإحباط، ضيق، حسيت بالظلم أو التقصير..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>2. إيه أول رد تلقائي جه في بالك فوراً؟</label>
+                <textarea id="reply-before" placeholder="اكتبي ردك المباشر أو اللي دار في سرك من غير فلترة..."></textarea>
+            </div>
+
+            <button class="btn btn-warm" onclick="startTimerStep()">إرسال وبدء دقيقة التفكير ⏳</button>
+        </div>
+
+        <!-- الخطوة 3: مؤقت الدقيقة (60 ثانية إجبارية للتفكير والهدوء) -->
+        <div id="step-3" class="step-section">
+            <div class="timer-card">
+                <h3 style="color: var(--accent-purple); margin-bottom: 6px;">دقيقة هدوء وتأمل</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                    خدي نفس عميق، وفكري في أصل المشكلة واحتياج الأم والبنت وراء هذا الكلام...
+                </p>
+                <div class="timer-circle" id="timer-circle">
+                    <span class="timer-number" id="timer-display">60</span>
+                </div>
+                <p style="font-weight: 600; color: var(--accent-teal);" id="timer-tip">صلّي في سرك من أجل سلام الخدمة واحتواء الموقف وقول مزمور انتي حافظه ...</p>
+            </div>
+        </div>
+
+        <!-- الخطوة 4: الانطباع الحكيم (بعد التفكير) -->
+        <div id="step-4" class="step-section">
+            <div class="quote-box" style="font-size: 1rem; padding: 14px; min-height: auto;" id="quote-preview-2"></div>
+
+            <div class="form-group">
+                <label>1. بعد ما فكرتي وهديتي.. إيه مشاعرك حالياً؟</label>
+                <textarea id="feelings-after" placeholder="مثلاً: متفهمة غيرتها على بنتها، هادية ومستعدة لاحتوائها..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>2. إيه الرد المناسب اللي وصلتي له بعد التفكير؟</label>
+                <textarea id="reply-after" placeholder="اكتبي الرد الخادم والواعي الذي يعالج جوهر المشكلة..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>3. بعد التفكير بموضوعية.. هل الأم عندها حق؟</label>
+                <div class="radio-options">
+                    <input type="radio" name="mother-right" id="right-yes" value="نعم، عندها حق (أو في جزء من كلامها)">
+                    <label for="right-yes" class="radio-label">نعم، عندها حق</label>
+
+                    <input type="radio" name="mother-right" id="right-no" value="لا، جانبها الصواب ولكن تحتاج احتواء">
+                    <label for="right-no" class="radio-label">لا، معندهاش حق</label>
+                </div>
+            </div>
+
+            <button class="btn btn-teal" onclick="showComparison()">عرض المقارنة والنتيجة 📋</button>
+        </div>
+
+        <!-- الخطوة 5: شاشة المقارنة النهائية -->
+        <div id="step-5" class="step-section">
+            <h3 style="text-align: center; color: var(--accent-purple); margin-bottom: 12px; font-weight: 800;">
+                مقارنة الاستجابة: قبل وبعد التفكير
+            </h3>
+
+            <div class="quote-box" style="font-size: 0.95rem; padding: 12px; margin-bottom: 16px;" id="final-quote"></div>
+
+            <div class="compare-box before-box">
+                <div class="compare-title">
+                    <span>⚡ الاستجابة الفورية (قبل التفكير)</span>
+                </div>
+                <div class="compare-content"><strong>المشاعر:</strong> <span id="res-feel-before"></span></div>
+                <div class="compare-content"><strong>الرد الأول:</strong> <span id="res-reply-before"></span></div>
+            </div>
+
+            <div class="compare-box after-box">
+                <div class="compare-title">
+                    <span>🕊️ الاستجابة الهادئة (بعد دقيقة التفكير)</span>
+                </div>
+                <div class="compare-content"><strong>المشاعر:</strong> <span id="res-feel-after"></span></div>
+                <div class="compare-content"><strong>الرد الحكيم:</strong> <span id="res-reply-after"></span></div>
+                <div class="compare-content"><strong>رأيك (هل الأم محقة؟):</strong> <span id="res-mother-verdict" style="font-weight:700; color:var(--accent-teal);"></span></div>
+            </div>
+
+            <button class="btn" onclick="resetApp()">موقف جديد من الورشة 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // الـ 30 جملة الخاصة بورشة التأسونات
+        const quotes = [
+            "بنتي بقالها شهرين غايبة ومحدش كلف خاطره يرن رنة يسأل عنها.",
+            "أنتم بتسألوا على ناس وناس، ومركزين مع بنات معينه بس.",
+            "هو ليه مفيش جروب واتساب بتنزلوا المواعيد عليه أول بأول؟ إحنا آخر من يعلم.",
+            "كل ما أتصل بخادمة ما بتردش ولا حتى بترجع ترن عليا.. هو إحنا بنشحت الاهتمام؟",
+            "بنتي حساسة وأكيد حصل موقف ضايقها وإلا ما كانتش رجعت معيطة ومحدش خد باله.",
+            "بنتي تعبانة ودخلت المستشفى ومحدش منكم فكر حتى يبعت رسالة يطمن عليها.",
+            "أنتم بتفتقدوا بالاسم والغياب بس عشان تسدوا خانة، لكن مفيش محبة حقيقية ولا سؤال من القلب.",
+            "بنتي اتنقلت لأسرة جديدة والخادمات الجديدة ميعرفوش حتى اسمها لحد دلوقتي ولا الخادمات القديمة سألوا عليها.",
+            "الافتقاد عندكم بقى مجرد مكالمة سريعة في دقيقة من غير أي تركيز في مشاكل البنت.",
+            "أنتم أصلاً صغيرين وما عندكمش خبرة بالتربية ومبتعرفوش تخدموا ولا تفهموا نفسية الجيل ده.",
+            "المناهج والدروس اللي بتتقال دي قديمة وبطريقة مملة تسد النفس، مفيش أي تجديد فـ لها حق متحضرش الخدمة.",
+            "الرحلة كانت فوضى ومحدش كان سائل في البنات ومفيش أمان، مش هسفرها معاكم تاني أبداً ما هو مينفعش عيال ياخدوا بالهم من عيال.",
+            "أنتم واخدين الخدمة مظهر ومنظرة بس، لكن جوهر الخدمة والاهتمام الحقيقي مش موجود.",
+            "كل همكم بس تجمعوا فلوس الاشتراكات والرحلات، لكن لما نطلب مساعدة في مشكلة محدش بيتحرك.",
+            "أنا شايفة إن مفيش تنسيق بين الخادمات، كل واحدة بتقول كلام عكس الثانية ومحدش فاهم حاجة.",
+            "طريقتكم في العقاب والتوبيخ بتخلي العيال تكره الكنيسة بدل ما تحبها.",
+            "بنتي بتقول الخادمة بتميز بنات معينة وبتخليهم هم بس اللي يشاركوا ويجاوبوا.",
+            "بنتي رافضة تصحى لمدارس الأحد ومفيش أي حاجة بتشدها عندكم، أنتم ناس مبتعرفش تخدم أو تسأل.",
+            "بنتي جاية تقولي تأسوني بتزعقلي ومحرجة قدام صحباتي، أنتم بتعقدوا البنات من الكنيسة.. ليه بتطلعوا عقدكم عليهم؟",
+            "ليه بنتي متطلعش في المسرحية وواقفة ورا في الكورال؟ هي بنتي ناقصة إيه عن اللي طالعين بطولة؟",
+            "بنتي صوتها حلو جداً وماخدتوهاش في الكورال، أنتم بتكسروا مقاديف العيال وتطردوا مواهبهم.",
+            "بنتي تعبت وتدربت شهور، وفي الآخر استبعدتوها في آخر لحظة من غير سبب مقنع.",
+            "بتطلبوا مبالغ كبيرة للاشتراك في اليوم الترفيهي ومفيش أي مراعاة للي عنده أكثر من طفل، اه ما انتم مش حاسين بحد عاوزين فلوس وبس.",
+            "امتحانات الميدتيرم الأسبوع الجاي وأنتم منزلين تدريبات يومية، هو مفيش عقل ولا إحساس بالمسؤولية؟",
+            "بنتي حكت لتاسوني سر خاص بيها ولقيت أمهات ثانية عارفينه وبيسألوني عنه!",
+            "أنا بعت رسالة للتاسوني ومردتش عليا بقالها أسبوع، هو إحنا مش مهمين للدرجة دي؟",
+            "أنتم بتدخلوا في حاجات تخص تربية البيت وده مش دوركم أصلاً.. دوركم درس الأسرة وفقط، إلا لو طلبنا منكم غير كده متتبرعوش.",
+            "أنتم أصلاً مش عارفين تربوا نفسكم علشان تيجوا توجهوا عيالنا.",
+            "تاسوني كلمتني بطريقة فيها تعالي وقلة ذوق كأني بشتغل عندها مش ولية أمر، هو مين اللي بيخدم مين؟ دي مفروض تقف عن الخدمة.",
+            "الخادمة بتنقل كلام الولاد لبعضه وبتخلق حزازيات وخناقات بين الأسر، هل دي خادمة طبيعية؟"
+        ];
+
+        let currentQuote = "";
+        let timerInterval = null;
+        let timeLeft = 60;
+
+        function drawQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            currentQuote = quotes[randomIndex];
+            document.getElementById("quote-display").innerText = `"${currentQuote}"`;
+            document.getElementById("btn-start").style.display = "block";
+            document.getElementById("btn-draw").innerText = "سحب موقف آخر 🎲";
+        }
+
+        function goToStep(stepNum) {
+            document.querySelectorAll(".step-section").forEach(s => s.classList.remove("active"));
+            const target = document.getElementById("step-" + stepNum);
+            if (target) target.classList.add("active");
+
+            if (stepNum === 2) {
+                document.getElementById("quote-preview-1").innerText = `"${currentQuote}"`;
+            } else if (stepNum === 4) {
+                document.getElementById("quote-preview-2").innerText = `"${currentQuote}"`;
+            }
+        }
+
+        function startTimerStep() {
+            const f1 = document.getElementById("feelings-before").value.trim();
+            const r1 = document.getElementById("reply-before").value.trim();
+            if (!f1 || !r1) {
+                alert("يرجى كتابة مشاعرك وردك التلقائي أولاً قبل بدء التأمل.");
+                return;
+            }
+
+            goToStep(3);
+            timeLeft = 60;
+            updateTimerDisplay();
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    goToStep(4);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById("timer-display").innerText = timeLeft;
+            const progress = ((60 - timeLeft) / 60) * 100;
+            document.getElementById("timer-circle").style.setProperty('--progress', progress);
+        }
+
+        function showComparison() {
+            const f2 = document.getElementById("feelings-after").value.trim();
+            const r2 = document.getElementById("reply-after").value.trim();
+            const radio = document.querySelector('input[name="mother-right"]:checked');
+
+            if (!f2 || !r2 || !radio) {
+                alert("يرجى إكمال أسئلة ما بعد التفكير وتحديد رأيك.");
+                return;
+            }
+
+            document.getElementById("final-quote").innerText = `"${currentQuote}"`;
+            document.getElementById("res-feel-before").innerText = document.getElementById("feelings-before").value;
+            document.getElementById("res-reply-before").innerText = document.getElementById("reply-before").value;
+            document.getElementById("res-feel-after").innerText = f2;
+            document.getElementById("res-reply-after").innerText = r2;
+            document.getElementById("res-mother-verdict").innerText = radio.value;
+
+            goToStep(5);
+        }
+
+        function resetApp() {
+            document.getElementById("feelings-before").value = "";
+            document.getElementById("reply-before").value = "";
+            document.getElementById("feelings-after").value = "";
+            document.getElementById("reply-after").value = "";
+            const radios = document.querySelectorAll('input[name="mother-right"]');
+            radios.forEach(r => r.checked = false);
+
+            document.getElementById("quote-display").innerText = "اضغطي على الزر لسحب موقف أو شكوى عشوائية لبدء التدريب...";
+            document.getElementById("btn-start").style.display = "none";
+            document.getElementById("btn-draw").innerText = "اسحبي جملة عشوائية ✨";
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
